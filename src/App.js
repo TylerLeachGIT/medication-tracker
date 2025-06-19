@@ -11,7 +11,9 @@ const MedicationTracker = () => {
     timesPerDay: 1,
     schedule: ['morning'],
     startDate: new Date().toISOString().split('T')[0],
-    refillAlert: 7
+    refillAlert: 7,
+    takeWithFood: false,
+    daysOfWeek: []
   });
 
   // Load data from localStorage on component mount
@@ -27,9 +29,20 @@ const MedicationTracker = () => {
     localStorage.setItem('medications', JSON.stringify(medications));
   }, [medications]);
 
+  const timeSlots = ['morning', 'afternoon', 'evening', 'bedtime'];
+
+  const daysOfWeek = [
+    { value: 'monday', label: 'Mon' },
+    { value: 'tuesday', label: 'Tue' },
+    { value: 'wednesday', label: 'Wed' },
+    { value: 'thursday', label: 'Thu' },
+    { value: 'friday', label: 'Fri' },
+    { value: 'saturday', label: 'Sat' },
+    { value: 'sunday', label: 'Sun' }
+  ];
 
   const addMedication = () => {
-    if (!newMed.name || !newMed.dosage || !newMed.pillCount) return;
+    if (!newMed.name || !newMed.dosage || !newMed.pillCount || newMed.daysOfWeek.length === 0) return;
     
     const medication = {
       id: Date.now(),
@@ -49,7 +62,9 @@ const MedicationTracker = () => {
       timesPerDay: 1,
       schedule: ['morning'],
       startDate: new Date().toISOString().split('T')[0],
-      refillAlert: 7
+      refillAlert: 7,
+      takeWithFood: false,
+      daysOfWeek: []
     });
     setShowAddForm(false);
   };
@@ -104,6 +119,29 @@ const MedicationTracker = () => {
       timesPerDay: times,
       schedule: schedules[times] || ['morning']
     });
+  };
+
+  const toggleDayOfWeek = (day) => {
+    const currentDays = newMed.daysOfWeek;
+    let newDays;
+    
+    if (currentDays.includes(day)) {
+      // Remove day if already selected
+      newDays = currentDays.filter(d => d !== day);
+    } else {
+      // Add day if not selected
+      newDays = [...currentDays, day];
+    }
+    
+    setNewMed({
+      ...newMed,
+      daysOfWeek: newDays
+    });
+  };
+
+  const shouldShowToday = (med) => {
+    const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+    return med.daysOfWeek.includes(today);
   };
 
   return (
@@ -211,6 +249,45 @@ const MedicationTracker = () => {
                 />
               </div>
             </div>
+            
+            {/* Take with Food Toggle */}
+            <div className="mt-4">
+              <label className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  checked={newMed.takeWithFood}
+                  onChange={(e) => setNewMed({...newMed, takeWithFood: e.target.checked})}
+                  className="w-5 h-5 text-blue-500 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                />
+                <span className="text-sm font-medium text-gray-700">Take with food</span>
+              </label>
+            </div>
+
+            {/* Days of Week Selector */}
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                Days of the week
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {daysOfWeek.map(day => (
+                  <button
+                    key={day.value}
+                    type="button"
+                    onClick={() => toggleDayOfWeek(day.value)}
+                    className={`px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all ${
+                      newMed.daysOfWeek.includes(day.value)
+                        ? 'bg-blue-500 border-blue-500 text-white'
+                        : 'bg-white border-gray-300 text-gray-700 hover:border-blue-300'
+                    }`}
+                  >
+                    {day.label}
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-gray-500 mt-2">
+                Select the days when you need to take this medication (at least one day required)
+              </p>
+            </div>
             <div className="flex space-x-3 mt-6">
               <button
                 onClick={addMedication}
@@ -260,6 +337,9 @@ const MedicationTracker = () => {
                   <div>
                     <h3 className="text-xl font-semibold text-gray-800">{med.name}</h3>
                     <p className="text-gray-600">{med.dosage} • {med.timesPerDay}x daily</p>
+                    {med.takeWithFood && (
+                      <p className="text-blue-600 text-sm">🥪 Take with food</p>
+                    )}
                     <div className="flex items-center mt-2">
                       <Calendar className="w-4 h-4 text-gray-500 mr-1" />
                       <span className="text-sm text-gray-500">
@@ -271,6 +351,9 @@ const MedicationTracker = () => {
                         </span>
                       )}
                     </div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      Days: {med.daysOfWeek.map(day => day.slice(0,3)).join(', ')}
+                    </div>
                   </div>
                   <button
                     onClick={() => deleteMedication(med.id)}
@@ -281,27 +364,33 @@ const MedicationTracker = () => {
                 </div>
                 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {med.schedule.map(timeSlot => (
-                    <button
-                      key={timeSlot}
-                      onClick={() => markDoseTaken(med.id, timeSlot, getTodayString())}
-                      className={`p-3 rounded-lg border-2 transition-all ${
-                        isDoseTaken(med, timeSlot)
-                          ? 'bg-green-100 border-green-500 text-green-800'
-                          : 'bg-gray-50 border-gray-300 text-gray-700 hover:bg-gray-100'
-                      }`}
-                    >
-                      
-                      <div className="flex items-center justify-center space-x-2">
-                        {isDoseTaken(med, timeSlot) ? (
-                          <Check className="w-4 h-4" />
-                        ) : (
-                          <Clock className="w-4 h-4" />
-                        )}
-                        <span className="capitalize text-sm font-medium">{timeSlot}</span>
-                      </div>
-                    </button>
-                  ))}
+                  {shouldShowToday(med) ? (
+                    med.schedule.map(timeSlot => (
+                      <button
+                        key={timeSlot}
+                        onClick={() => markDoseTaken(med.id, timeSlot, getTodayString())}
+                        className={`p-3 rounded-lg border-2 transition-all ${
+                          isDoseTaken(med, timeSlot)
+                            ? 'bg-green-100 border-green-500 text-green-800'
+                            : 'bg-gray-50 border-gray-300 text-gray-700 hover:bg-gray-100'
+                        }`}
+                      >
+                        <div className="flex items-center justify-center space-x-2">
+                          {isDoseTaken(med, timeSlot) ? (
+                            <Check className="w-4 h-4" />
+                          ) : (
+                            <Clock className="w-4 h-4" />
+                          )}
+                          <span className="capitalize text-sm font-medium">{timeSlot}</span>
+                        </div>
+                      </button>
+                    ))
+                  ) : (
+                    <div className="col-span-2 md:col-span-4 text-center py-4 text-gray-500 bg-gray-50 rounded-lg">
+                      <Clock className="w-6 h-6 mx-auto mb-2 text-gray-400" />
+                      <p className="text-sm">No doses scheduled for today</p>
+                    </div>
+                  )}
                 </div>
               </div>
             ))
