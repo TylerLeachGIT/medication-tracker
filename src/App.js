@@ -70,7 +70,14 @@ const MedicationTracker = () => {
   };
 
   const deleteMedication = (id) => {
-    setMedications(medications.filter(med => med.id !== id));
+    const medication = medications.find(med => med.id === id);
+    const confirmDelete = window.confirm(
+      `Are you sure you want to remove "${medication?.name}" from your tracker?\n\nThis action cannot be undone.`
+    );
+    
+    if (confirmDelete) {
+      setMedications(medications.filter(med => med.id !== id));
+    }
   };
 
   const markDoseTaken = (medId, timeSlot, date) => {
