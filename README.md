@@ -1,70 +1,177 @@
-# Getting Started with Create React App
+# 💊 MedTracker - Prescription Medication Tracker
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, user-friendly React application designed to help users manage their prescription medications, track daily doses, and receive timely refill alerts.
 
-## Available Scripts
 
-In the project directory, you can run:
+## 🌟 Features
 
-### `npm start`
+### Core Functionality
+- **Add Medications**: Easy-to-use form for inputting medication details
+- **Flexible Scheduling**: Support for 1-4 daily doses with automatic time slot assignment
+- **Daily Dose Tracking**: Simple click-to-mark interface for tracking taken doses
+- **Smart Refill Alerts**: Automatic notifications when prescriptions are running low
+- **Days Remaining Calculator**: Real-time calculation of remaining medication supply
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### User Experience
+- **Privacy-First**: All data stored locally on user's device
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
+- **Intuitive Interface**: Clean, medical-app inspired design
+- **Visual Feedback**: Color-coded dose tracking and refill alerts
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🚀 Live Demo
 
-### `npm test`
+[View Live Demo](https://medication-tracker-seven.vercel.app/) 
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🛠️ Technologies Used
 
-### `npm run build`
+- **Frontend**: React 18 with Hooks (useState, useEffect)
+- **Styling**: Tailwind CSS via CDN
+- **Icons**: Lucide React
+- **Storage**: Browser localStorage
+- **Build Tool**: Create React App
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 📱 Screenshots
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Main Dashboard
+![Main Dashboard](screenshots/main-dashboard.png)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+### Add Medication Form
+![Add Medication Form](screenshots/add-medication-form.png)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Refill Alerts
+![Refill Alerts](screenshots/refill-alerts.png)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🏁 Getting Started
 
-## Learn More
+### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Installation
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/TylerLeachGIT/medication-tracker.git
+   cd medication-tracker
+   ```
 
-### Code Splitting
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+3. **Install Lucide React icons**
+   ```bash
+   npm install lucide-react
+   ```
 
-### Analyzing the Bundle Size
+4. **Start the development server**
+   ```bash
+   npm start
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+5. **Open your browser**
+   Navigate to `http://localhost:3000`
 
-### Making a Progressive Web App
+### Styling Setup
+This project uses Tailwind CSS via CDN for simplicity. The CDN is already configured in `public/index.html`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 💡 Usage
 
-### Advanced Configuration
+### Adding a Medication
+1. Click the "Add Medication" button
+2. Fill in the medication details:
+   - Name (e.g., "Lisinopril")
+   - Dosage (e.g., "10mg")
+   - Total pill count
+   - Daily frequency (1-4 times)
+   - Start date
+   - Refill alert threshold
+3. Click "Add Medication"
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Tracking Daily Doses
+- Click on the time slot buttons (Morning, Afternoon, Evening, Bedtime) to mark doses as taken
+- Taken doses will show a green checkmark
+- Pending doses show a clock icon
 
-### Deployment
+### Managing Refill Alerts
+- The app automatically calculates when you'll run out of medication
+- Red alerts appear when medications are within your specified refill threshold
+- Default alert is set to 7 days before running out
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 🏗️ Project Structure
 
-### `npm run build` fails to minify
+```
+medication-tracker/
+├── public/
+│   ├── index.html          # Main HTML file with Tailwind CDN
+│   └── ...
+├── src/
+│   ├── App.js              # Main application component
+│   ├── index.js            # React app entry point
+│   ├── index.css           # Base styles
+│   └── ...
+├── package.json
+└── README.md
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🔧 Key Components
+
+### State Management
+- **medications**: Array of medication objects
+- **showAddForm**: Controls add medication form visibility
+- **newMed**: Form state for new medication input
+
+### Core Functions
+- **addMedication()**: Adds new medication to the list
+- **markDoseTaken()**: Toggles dose completion status
+- **calculateDaysLeft()**: Computes remaining medication days
+- **needsRefill()**: Determines if refill alert should show
+
+## 🔒 Privacy & Security
+
+- **Local Storage Only**: All data remains on the user's device
+- **No External APIs**: No medication data is sent to external servers
+- **Privacy by Design**: App works completely offline after initial load
+
+## 🚀 Future Enhancements
+
+- [ ] Data export functionality (CSV/PDF)
+- [ ] Medication interaction warnings
+- [ ] Adherence statistics and charts
+- [ ] Push notifications (PWA)
+- [ ] Dark mode toggle
+- [ ] Medication photo capture
+- [ ] Doctor appointment reminders
+- [ ] Multiple user profiles
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👨‍💻 Author
+
+**Tyler Leach**
+- GitHub: [@TylerLeachGIT](https://github.com/TylerLeachGIT)
+- Email: tylerleachGIT@gmail.com
+
+## 🙏 Acknowledgments
+
+- Icons provided by [Lucide](https://lucide.dev/)
+- Styling framework: [Tailwind CSS](https://tailwindcss.com/)
+- Built with [Create React App](https://create-react-app.dev/)
+
+---
+
+⚠️ **Disclaimer**: This application is for personal medication tracking only and should not replace professional medical advice. Always consult with healthcare providers for medical decisions.
